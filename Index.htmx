@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Amour pour Toi ❤️</title>
+    <style>
+        /* --- STYLE GENERAL --- */
+        body {
+            background: radial-gradient(circle, #2c0001 0%, #000000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            perspective: 1500px; /* Donne de la profondeur pour l'effet livre */
+            cursor: pointer;
+        }
+
+        /* --- ENVELOPPE --- */
+        .envelope-wrapper {
+            position: relative;
+            width: 350px;
+            height: 230px;
+            background-color: #fff;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            transition: all 1s ease;
+        }
+
+        /* Rabat supérieur */
+        .envelope-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; z-index: 4;
+            border-top: 115px solid #f9f9f9;
+            border-right: 175px solid transparent;
+            border-left: 175px solid transparent;
+            transform-origin: top;
+            transition: transform 0.8s ease-in-out;
+        }
+
+        /* Corps avant de l'enveloppe */
+        .envelope-wrapper::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; z-index: 2;
+            border-top: 115px solid transparent;
+            border-right: 175px solid #e0e0e0;
+            border-bottom: 115px solid #e0e0e0;
+            border-left: 175px solid #e0e0e0;
+        }
+
+        /* Le Coeur central */
+        .heart {
+            position: absolute;
+            top: 50%; left: 50%; width: 40px; height: 40px;
+            background: #d40000;
+            z-index: 5;
+            transform: translate(-50%, -50%) rotate(45deg);
+            transition: all 0.5s ease;
+            box-shadow: 0 0 20px rgba(212, 0, 0, 0.5);
+        }
+        .heart::before, .heart::after {
+            content: ""; position: absolute; width: 40px; height: 40px;
+            background: #d40000; border-radius: 50%;
+        }
+        .heart::before { top: -20px; left: 0; }
+        .heart::after { left: -20px; top: 0; }
+
+        /* --- LA CARTE (LIVRE 3D) --- */
+        .book {
+            position: absolute;
+            top: 10px; left: 10px;
+            width: 330px; height: 210px;
+            background: white;
+            z-index: 1;
+            transform-style: preserve-3d;
+            transition: all 1.5s ease-in-out;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%; height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+            border: 1px solid #eee;
+        }
+
+        /* Couverture du livre */
+        .cover {
+            background: #ffffff;
+            z-index: 10;
+            transform-origin: left;
+            transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        /* Page intérieure */
+        .content {
+            background: #fffafa;
+            transform: rotateY(0deg); /* Elle est derrière la couverture */
+            z-index: 9;
+        }
+
+        /* --- ANIMATIONS AU CLIC --- */
+        .container.open .envelope-wrapper::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .container.open .heart {
+            opacity: 0;
+            transform: translate(-50%, -250%) rotate(45deg);
+        }
+
+        /* La carte sort légèrement et s'agrandit */
+        .container.open .book {
+            transform: translateY(-120px) scale(1.2);
+            z-index: 10;
+        }
+
+        /* La page du livre s'ouvre sur le côté */
+        .container.open .cover {
+            transform: rotateY(-160deg);
+        }
+
+        /* Style des textes */
+        h2 { color: #d40000; font-family: 'Georgia', serif; font-size: 1.8em; margin: 0; }
+        p { color: #333; font-size: 16px; line-height: 1.6; text-align: center; }
+        .signature { margin-top: 20px; font-weight: bold; color: #d40000; font-style: italic; }
+
+        /* Animation de flottement pour l'enveloppe au début */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .container:not(.open) {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="loveMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container" id="cardContainer">
+        <div class="envelope-wrapper">
+            <div class="book">
+                <div class="page cover">
+                    <h2>Pour Ma Reine ❤️</h2>
+                    <p>Une surprise t'attend à l'intérieur...</p>
+                    <small style="color: #999;">(Touche pour ouvrir)</small>
+                </div>
+                <div class="page content">
+                    <h3 style="color: #d40000;">Mon Amour,</h3>
+                    <p>Comme dans une chanson de Dadju, tu es ma "Reine". Mon cœur ne bat que pour toi. Merci d'être la femme extraordinaire que tu es.</p>
+                    <p class="signature">Je t'aime pour l'éternité.</p>
+                </div>
+            </div>
+            <div class="heart"></div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('cardContainer');
+        const music = document.getElementById('loveMusic');
+
+        container.addEventListener('click', function() {
+            // Activer les animations
+            container.classList.add('open');
+            
+            // Jouer la musique
+            music.volume = 0.5; // Volume modéré
+            music.play().catch(e => console.log("L'audio attend un clic"));
+        });
+    </script>
+</body>
+</html>
